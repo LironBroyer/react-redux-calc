@@ -1,0 +1,6 @@
+export const ADD_DIGIT = 'ADD_DIGIT'
+export const CHOOSE_SIGN = 'CHOOSE_SIGN'
+export const CALCULATE = 'CALCULATE'
+export const CLEAR_ALL = 'CLEAR_ALL'
+export const CLEAR = 'CLEAR'
+export const DELETE_DIGIT = 'DELETE_DIGIT'
