@@ -1,30 +1,27 @@
 import { Grid } from '@material-ui/core'
 import { styled } from '@material-ui/styles'
-import React, { Fragment } from 'react'
+import React from 'react'
 import MyButton from './MyButton'
 import {
     addDigit,
     calculate,
-    chooseSign,
+    chooseAction,
     clear,
     clearAll,
     deleteDigit,
 } from '../actions'
 import { useDispatch } from 'react-redux'
+import GridItem from './GridItem'
 
 const FlexedDiv = styled('div')({
     display: 'flex',
     justifyContent: 'space-between',
 })
 
-const GrowGrid = styled(Grid)({
-    flexGrow: '2',
-})
-
 const Keypad = () => {
     const dispatch = useDispatch()
 
-    const buildNumbersButtons = () => {
+    const renderNumbersButtons = () => {
         const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 
         return numbers.reverse().map((number) => {
@@ -33,76 +30,62 @@ const Keypad = () => {
                     <MyButton
                         backgroundColor="secondary"
                         text={number}
-                        onClick={(e) => dispatch(addDigit(e.target.outerText))}
+                        onClick={(e) => dispatch(addDigit(number))}
                     ></MyButton>
                 </Grid>
             )
         })
     }
 
-    const signs = {
+    const actions = {
         '+': (x, y) => x + y,
         '-': (x, y) => x - y,
         '*': (x, y) => x * y,
         '/': (x, y) => x / y,
     }
 
-    const onSignClick = (e) => {
-        dispatch(chooseSign(signs[e.target.outerText]))
-    }
-
-    const buildSignsButtons = () => {
-        return Object.keys(signs).map((sign) => {
+    const renderActionsButtons = () => {
+        return Object.keys(actions).map((action) => {
             return (
-                <Grid item>
-                    <MyButton
-                        backgroundColor="primary"
-                        text={sign}
-                        onClick={(e) => onSignClick(e)}
-                    ></MyButton>
-                </Grid>
+                <GridItem
+                    backgroundColor="primary"
+                    text={action}
+                    onClick={() => dispatch(chooseAction(actions[action]))}
+                ></GridItem>
             )
         })
     }
 
-    const buildClearButtons = () => {
+    const renderClearButtons = () => {
         return (
-            <Fragment>
-                <Grid item>
-                    <MyButton
-                        backgroundColor="primary"
-                        text="Clear All"
-                        onClick={() => dispatch(clearAll())}
-                    ></MyButton>
-                </Grid>
-                <Grid item>
-                    <MyButton
-                        backgroundColor="primary"
-                        text="Clear"
-                        onClick={() => dispatch(clear())}
-                    ></MyButton>
-                </Grid>
-                <Grid item>
-                    <MyButton
-                        backgroundColor="primary"
-                        text="delete"
-                        onClick={() => dispatch(deleteDigit())}
-                    ></MyButton>
-                </Grid>
-                <Grid item>
-                    <MyButton
-                        backgroundColor="primary"
-                        text="="
-                        onClick={() => dispatch(calculate())}
-                    ></MyButton>
-                </Grid>
-            </Fragment>
+            <>
+                <GridItem
+                    backgroundColor="primary"
+                    text="Clear All"
+                    onClick={() => dispatch(clearAll())}
+                ></GridItem>
+                <GridItem
+                    backgroundColor="primary"
+                    text="Clear"
+                    onClick={() => dispatch(clear())}
+                ></GridItem>
+                <GridItem
+                    backgroundColor="primary"
+                    text="delete"
+                    onClick={() => dispatch(deleteDigit())}
+                ></GridItem>
+                <GridItem
+                    backgroundColor="primary"
+                    text="="
+                    onClick={() => dispatch(calculate())}
+                ></GridItem>
+            </>
         )
     }
 
     return (
         <FlexedDiv>
-            <GrowGrid
+            <Grid
                 container
                 item
                 spacing={1}
@@ -110,8 +93,8 @@ const Keypad = () => {
                 sm={8}
                 direction="row-reverse"
             >
-                {buildNumbersButtons()}
-            </GrowGrid>
+                {renderNumbersButtons()}
+            </Grid>
             <Grid
                 container
                 item
@@ -121,7 +104,7 @@ const Keypad = () => {
                 xs={12}
                 sm={2}
             >
-                {buildSignsButtons()}
+                {renderActionsButtons()}
             </Grid>
             <Grid
                 container
@@ -132,7 +115,7 @@ const Keypad = () => {
                 xs={12}
                 sm={2}
             >
-                {buildClearButtons()}
+                {renderClearButtons()}
             </Grid>
         </FlexedDiv>
     )

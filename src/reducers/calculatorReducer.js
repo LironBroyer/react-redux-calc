@@ -1,7 +1,7 @@
 import {
     ADD_DIGIT,
     CALCULATE,
-    CHOOSE_SIGN,
+    CHOOSE_ACTION,
     CLEAR,
     CLEAR_ALL,
     DELETE_DIGIT,
@@ -10,61 +10,59 @@ import {
 const initialState = {
     firstNumber: 0,
     secondNumber: 0,
-    sign: null,
+    selectedAction: null,
 }
 
 export default (state = initialState, action) => {
+    let newState = { ...state }
+
     switch (action.type) {
-        case ADD_DIGIT:
-            state = { ...state }
-            if (state.sign) {
-                state.secondNumber =
-                    state.secondNumber * 10 + parseInt(action.payload)
+        case ADD_DIGIT: {
+            if (newState.selectedAction) {
+                newState.secondNumber =
+                    newState.secondNumber * 10 + action.payload
             } else {
-                state.firstNumber =
-                    state.firstNumber * 10 + parseInt(action.payload)
+                newState.firstNumber =
+                    newState.firstNumber * 10 + action.payload
             }
-            return state
-        case CHOOSE_SIGN: {
-            state = { ...state }
-            state.sign = action.payload
-            return state
+            return newState
+        }
+        case CHOOSE_ACTION: {
+            newState.selectedAction = action.payload
+            return newState
         }
         case CALCULATE: {
-            state = { ...state }
-            if (state.sign) {
-                state.firstNumber = state.sign(
-                    state.firstNumber,
-                    state.secondNumber
+            if (newState.selectedAction) {
+                newState.firstNumber = newState.selectedAction(
+                    newState.firstNumber,
+                    newState.secondNumber
                 )
-                state.secondNumber = 0
-                state.sign = null
+                newState.secondNumber = 0
+                newState.selectedAction = null
             }
 
-            return state
+            return newState
         }
         case CLEAR_ALL: {
-            return (state = initialState)
+            return (newState = initialState)
         }
         case CLEAR: {
-            state = { ...state }
-            if (state.sign) {
-                state.secondNumber = 0
+            if (newState.selectedAction) {
+                newState.secondNumber = 0
             } else {
-                state.firstNumber = 0
+                newState.firstNumber = 0
             }
 
-            return state
+            return newState
         }
         case DELETE_DIGIT: {
-            state = { ...state }
-            if (state.sign) {
-                state.secondNumber = state.secondNumber / 10
+            if (newState.selectedAction) {
+                newState.secondNumber = Math.floor(newState.secondNumber / 10)
             } else {
-                state.firstNumber = state.firstNumber / 10
+                newState.firstNumber = Math.floor(newState.firstNumber / 10)
             }
 
-            return state
+            return newState
         }
 
         default:

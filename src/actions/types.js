@@ -1,5 +1,5 @@
 export const ADD_DIGIT = 'ADD_DIGIT'
-export const CHOOSE_SIGN = 'CHOOSE_SIGN'
+export const CHOOSE_ACTION = 'CHOOSE_ACTION'
 export const CALCULATE = 'CALCULATE'
 export const CLEAR_ALL = 'CLEAR_ALL'
 export const CLEAR = 'CLEAR'
